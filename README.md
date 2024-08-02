@@ -1,4 +1,4 @@
-# Bash
+# Bash monitoring
 Really simple - read last  lines of an error log and if the entry is within 10minutes sent an email
 
 This particular code is capable of checking log of this type:
@@ -16,3 +16,5 @@ and working configured smtp relay - for example postfix
 
 In order to be used for monitoring purposes also - the script could be scheduled as a cron job
 
+The idea of this monitoring is to be used whenever for any reason we need some simple and fast custom solution, there is a maintenance in the main monitoring, etc.
+Receiving a monitoring alarm per emial is much better than nothing :-)
