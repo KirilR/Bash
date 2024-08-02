@@ -10,7 +10,7 @@ date_to_epoch() {
 
 # chetem poslednite 100 reda
 while read -r line; do
-    # Add the full line to the array
+    
     log_entries+=("$line")
 done < <(tail -n 100 "$LOG_FILE")
 
@@ -29,8 +29,6 @@ echo $log_date -tvae log datatata
 epoch=$(date_to_epoch "$log_date")
 time_diff=$((t2 - epoch))
 if ((time_diff >= 0 && time_diff <= 600)); then
-    #printf "Date %s is within the last 10 minutes.\n"
-    #printf "%s\n" "$raw_data"
     tobemail+="$raw_data\n"
     fi
 done
