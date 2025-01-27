@@ -1,0 +1,29 @@
+#!/bin/bash
+# get every line from forcheck list and if there is the same line in forcheck and if there is the same line in  toBeDecom.txt remove it
+# File containing the list of server names to check 
+forcheck_file="forcheck"
+
+# File containing the list of servers in progress
+decommissioning_file="toBeDecom.txt"
+
+# Convert the forcheck file to lowercase, remove duplicates, and read into an array
+mapfile -t forcheck_servers < <(tr '[:upper:]' '[:lower:]' < "$forcheck_file" | sort -u)
+
+# Use awk to filter out lines where the text before the first dot matches any server in the forcheck list
+awk -v servers="$(printf "|%s" "${forcheck_servers[@]}")" '
+BEGIN {
+  # Remove the leading "|" from the regex and prepare the pattern
+  pattern = substr(servers, 2)
+  IGNORECASE = 1
+}
+{
+  # Extract the part of the line before the first dot
+  server_name = (index($0, ".") > 0) ? substr($0, 1, index($0, ".") - 1) : $0
+  # If the extracted name does not match the pattern, print the line
+  if (!(server_name ~ pattern) || server_name == "") {
+    print $0
+  }
+}
+' "$decommissioning_file" > "${decommissioning_file}.tmp" && mv "${decommissioning_file}.tmp" "$decommissioning_file"
+
+echo "Filtering complete. Updated file: $decommissioning_file"
